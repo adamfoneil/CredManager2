@@ -137,7 +137,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Postulate\Postulate.SqlCe\Postulate.SqlCe.csproj">
+      <Project>{0fbd09fe-dee0-43a5-a435-d1ec1d72d3dc}</Project>
+      <Name>Postulate.SqlCe</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

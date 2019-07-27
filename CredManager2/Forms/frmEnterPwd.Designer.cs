@@ -39,7 +39,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(298, 110);
+            this.btnCancel.Location = new System.Drawing.Point(458, 110);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 30);
@@ -50,7 +50,7 @@
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnOK.Location = new System.Drawing.Point(217, 110);
+            this.btnOK.Location = new System.Drawing.Point(377, 110);
             this.btnOK.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 30);
@@ -65,7 +65,7 @@
             this.tbPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.PasswordChar = '*';
-            this.tbPassword.Size = new System.Drawing.Size(288, 25);
+            this.tbPassword.Size = new System.Drawing.Size(195, 25);
             this.tbPassword.TabIndex = 1;
             // 
             // label1
@@ -81,7 +81,7 @@
             // 
             this.lblFilename.Location = new System.Drawing.Point(12, 12);
             this.lblFilename.Name = "lblFilename";
-            this.lblFilename.Size = new System.Drawing.Size(285, 34);
+            this.lblFilename.Size = new System.Drawing.Size(521, 34);
             this.lblFilename.TabIndex = 4;
             this.lblFilename.Text = "label2";
             // 
@@ -91,7 +91,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(385, 153);
+            this.ClientSize = new System.Drawing.Size(545, 153);
             this.Controls.Add(this.lblFilename);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbPassword);
