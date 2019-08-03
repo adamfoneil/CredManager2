@@ -35,10 +35,10 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changePasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnCopyPwd = new System.Windows.Forms.ToolStripDropDownButton();
+            this.cbFilterActive = new System.Windows.Forms.ToolStripComboBox();
             this.tbSearch = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.dgvEntries = new System.Windows.Forms.DataGridView();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colUrl = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGoTo = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -47,7 +47,7 @@
             this.colPassword = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCopyPwd = new System.Windows.Forms.DataGridViewButtonColumn();
             this.colIsActive = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.cbFilterActive = new System.Windows.Forms.ToolStripComboBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEntries)).BeginInit();
             this.SuspendLayout();
@@ -82,19 +82,19 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.newToolStripMenuItem.Text = "New...";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.openToolStripMenuItem.Text = "Open...";
             // 
             // changePasswordToolStripMenuItem
             // 
             this.changePasswordToolStripMenuItem.Name = "changePasswordToolStripMenuItem";
-            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.changePasswordToolStripMenuItem.Text = "Change Password...";
             // 
             // btnCopyPwd
@@ -105,6 +105,14 @@
             this.btnCopyPwd.Name = "btnCopyPwd";
             this.btnCopyPwd.Size = new System.Drawing.Size(101, 22);
             this.btnCopyPwd.Text = "Copy Password";
+            // 
+            // cbFilterActive
+            // 
+            this.cbFilterActive.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.cbFilterActive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFilterActive.Name = "cbFilterActive";
+            this.cbFilterActive.Size = new System.Drawing.Size(80, 25);
+            this.cbFilterActive.SelectedIndexChanged += new System.EventHandler(this.CbFilterActive_SelectedIndexChanged);
             // 
             // tbSearch
             // 
@@ -138,14 +146,6 @@
             this.dgvEntries.Size = new System.Drawing.Size(820, 262);
             this.dgvEntries.TabIndex = 1;
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 287);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(820, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
             // colName
             // 
             this.colName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -165,7 +165,7 @@
             this.colGoTo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colGoTo.HeaderText = "Go To";
             this.colGoTo.Name = "colGoTo";
-            this.colGoTo.Width = 49;
+            this.colGoTo.Width = 46;
             // 
             // colUserName
             // 
@@ -179,7 +179,7 @@
             this.colCopyUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colCopyUserName.HeaderText = "Copy";
             this.colCopyUserName.Name = "colCopyUserName";
-            this.colCopyUserName.Width = 44;
+            this.colCopyUserName.Width = 43;
             // 
             // colPassword
             // 
@@ -193,7 +193,7 @@
             this.colCopyPwd.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colCopyPwd.HeaderText = "Copy";
             this.colCopyPwd.Name = "colCopyPwd";
-            this.colCopyPwd.Width = 44;
+            this.colCopyPwd.Width = 43;
             // 
             // colIsActive
             // 
@@ -203,12 +203,13 @@
             this.colIsActive.Name = "colIsActive";
             this.colIsActive.Width = 48;
             // 
-            // cbFilterActive
+            // statusStrip1
             // 
-            this.cbFilterActive.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.cbFilterActive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFilterActive.Name = "cbFilterActive";
-            this.cbFilterActive.Size = new System.Drawing.Size(80, 25);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 287);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(820, 22);
+            this.statusStrip1.TabIndex = 2;
+            this.statusStrip1.Text = "statusStrip1";
             // 
             // frmMain
             // 

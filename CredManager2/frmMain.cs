@@ -64,6 +64,8 @@ namespace CredManager2
 
         private async Task FillRecordsAsync()
         {
+            if (_db == null) return;
+
             using (var cn = _db.GetConnection())
             {
                 var records = await new Entries()
@@ -121,6 +123,11 @@ namespace CredManager2
             }
 
             return null;
+        }
+
+        private async void CbFilterActive_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await FillRecordsAsync();
         }
     }
 }
