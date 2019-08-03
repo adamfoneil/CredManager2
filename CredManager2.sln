@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CredManager2", "CredManager2\CredManager2.csproj", "{0CE79393-39A9-4DAA-AB48-92B0A46C43AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Postulate.SqlCe", "..\Postulate\Postulate.SqlCe\Postulate.SqlCe.csproj", "{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Postulate.Base", "..\Postulate\Postulate.Base\Postulate.Base.csproj", "{6B480F06-6A12-4E16-88AD-6886DA29E602}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,14 +15,6 @@ Global
 		{0CE79393-39A9-4DAA-AB48-92B0A46C43AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CE79393-39A9-4DAA-AB48-92B0A46C43AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CE79393-39A9-4DAA-AB48-92B0A46C43AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B480F06-6A12-4E16-88AD-6886DA29E602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B480F06-6A12-4E16-88AD-6886DA29E602}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B480F06-6A12-4E16-88AD-6886DA29E602}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B480F06-6A12-4E16-88AD-6886DA29E602}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
