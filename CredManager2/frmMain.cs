@@ -1,8 +1,12 @@
-﻿using CredManager2.Services;
+﻿using CredManager2.Queries;
+using CredManager2.Services;
 using JsonSettings;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinForms.Library.Extensions;
 using WinForms.Library.Models;
 
 namespace CredManager2
@@ -11,18 +15,27 @@ namespace CredManager2
     {
         private Settings _settings = null;
         private CredManagerDb _db = null;
+        private EntryGridViewBinder _binder = null;
 
         public frmMain()
         {
             InitializeComponent();
+            dgvEntries.AutoGenerateColumns = false;
         }
 
-        private void FrmMain_Load(object sender, EventArgs e)
+        private async void FrmMain_Load(object sender, EventArgs e)
         {
             try
             {
                 _settings = JsonSettingsBase.Load<Settings>();
                 _settings.FormPosition?.Apply(this);
+
+                cbFilterActive.Fill(new Dictionary<bool, string>()
+                {
+                    { true, "Active" },
+                    { false, "Inactive" }
+                });
+                cbFilterActive.SetValue<bool>(true);
 
                 if (File.Exists(_settings.DatabaseFile))
                 {
@@ -36,12 +49,29 @@ namespace CredManager2
                 }
                 else
                 {
-                    CreateDatabase();
+                    _db = CreateDatabase();
                 }
+
+                _binder = new EntryGridViewBinder(_db, dgvEntries);
+
+                await FillRecordsAsync();
             }
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
+            }
+        }
+
+        private async Task FillRecordsAsync()
+        {
+            using (var cn = _db.GetConnection())
+            {
+                var records = await new Entries()
+                {
+                    IsActive = cbFilterActive.GetValue<bool>(),
+                    Search = tbSearch.Text
+                }.ExecuteAsync(cn);
+                _binder.Fill(records);
             }
         }
 
@@ -72,29 +102,25 @@ namespace CredManager2
             }
         }
 
-        private void CreateDatabase()
+        private CredManagerDb CreateDatabase()
         {
-            try
+            string databaseFile;
+            string pwd;
+            string hint;
+            if (frmCreateDb.Prompt(out databaseFile, out pwd, out hint))
             {
-                string databaseFile;
-                string pwd;
-                string hint;
-                if (frmCreateDb.Prompt(out databaseFile, out pwd, out hint))
+                var db = new CredManagerDb(databaseFile, pwd);
+                using (var cn = db.GetConnection())
                 {
-                    _db = new CredManagerDb(databaseFile, pwd);
-                    using (var cn = _db.GetConnection())
-                    {
-                        _settings.DatabaseFile = databaseFile;
-                        _settings.PasswordHint = hint;
-                        _settings.Save();
-                        Text = $"CredManager - {_settings.DatabaseFile}";
-                    }
+                    _settings.DatabaseFile = databaseFile;
+                    _settings.PasswordHint = hint;
+                    _settings.Save();
+                    Text = $"CredManager - {_settings.DatabaseFile}";
                 }
+                return db;
             }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message);
-            }
+
+            return null;
         }
     }
 }

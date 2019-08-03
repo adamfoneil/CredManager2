@@ -5,8 +5,7 @@ namespace CredManager2.Models
 {
     [Identity(nameof(Id))]
     public class Entry
-    {
-        [PrimaryKey]
+    {     
         [MaxLength(100)]
         public string Name { get; set; }
 

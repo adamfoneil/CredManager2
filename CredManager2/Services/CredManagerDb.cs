@@ -30,7 +30,22 @@ namespace CredManager2.Services
 
                 using (var cn = new SqlCeConnection(_connectionString))
                 {
-                    cn.CreateTable<Entry>();
+                    // Postulate CreateTable not working right because I can't get PK on the identiy
+                    // using the original CredManager code here
+
+                    cn.Open();
+                    using (var createTable = new SqlCeCommand(
+                        @"CREATE TABLE [Entry] (
+                            [Name] nvarchar(50) NOT NULL,
+                            [Url] nvarchar(100) NOT NULL,
+                            [UserName] nvarchar(50) NOT NULL,
+                            [Password] nvarchar(50) NOT NULL,
+                            [IsActive] bit NOT NULL,
+                            [Id] int identity(1,1) PRIMARY KEY
+                        )", cn))
+                    {
+                        createTable.ExecuteNonQuery();
+                    }
                 }
             }
 
