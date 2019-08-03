@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CredManager2", "CredManager
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Postulate.SqlCe", "..\Postulate\Postulate.SqlCe\Postulate.SqlCe.csproj", "{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Postulate.Base", "..\Postulate\Postulate.Base\Postulate.Base.csproj", "{6B480F06-6A12-4E16-88AD-6886DA29E602}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FBD09FE-DEE0-43A5-A435-D1EC1D72D3DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B480F06-6A12-4E16-88AD-6886DA29E602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B480F06-6A12-4E16-88AD-6886DA29E602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B480F06-6A12-4E16-88AD-6886DA29E602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B480F06-6A12-4E16-88AD-6886DA29E602}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

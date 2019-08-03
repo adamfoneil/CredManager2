@@ -49,13 +49,13 @@
             // 
             this.tbFilename.Location = new System.Drawing.Point(105, 12);
             this.tbFilename.Name = "tbFilename";
-            this.tbFilename.Size = new System.Drawing.Size(360, 21);
+            this.tbFilename.Size = new System.Drawing.Size(412, 21);
             this.tbFilename.TabIndex = 1;
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(342, 166);
+            this.btnOK.Location = new System.Drawing.Point(394, 166);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 9;
@@ -67,7 +67,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(423, 166);
+            this.btnCancel.Location = new System.Drawing.Point(475, 166);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 10;
@@ -144,7 +144,7 @@
             // 
             // btnSelectFile
             // 
-            this.btnSelectFile.Location = new System.Drawing.Point(471, 10);
+            this.btnSelectFile.Location = new System.Drawing.Point(523, 10);
             this.btnSelectFile.Name = "btnSelectFile";
             this.btnSelectFile.Size = new System.Drawing.Size(27, 23);
             this.btnSelectFile.TabIndex = 11;
@@ -162,7 +162,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(510, 201);
+            this.ClientSize = new System.Drawing.Size(562, 201);
             this.Controls.Add(this.btnSelectFile);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.tbHint);
@@ -180,7 +180,7 @@
             this.MinimizeBox = false;
             this.Name = "frmCreateDb";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Create Database";            
+            this.Text = "Create Database";
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -42,9 +42,6 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Postulate.Base, Version=1.3.28.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Postulate.Base.1.3.28\lib\netstandard2.0\Postulate.Base.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
@@ -138,6 +135,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Postulate\Postulate.Base\Postulate.Base.csproj">
+      <Project>{6B480F06-6A12-4E16-88AD-6886DA29E602}</Project>
+      <Name>Postulate.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Postulate\Postulate.SqlCe\Postulate.SqlCe.csproj">
       <Project>{0fbd09fe-dee0-43a5-a435-d1ec1d72d3dc}</Project>
       <Name>Postulate.SqlCe</Name>
