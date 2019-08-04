@@ -12,7 +12,7 @@ namespace CredManager2.Queries
 
         public bool IsActive { get; set; }
 
-        [Where("([Name] LIKE '%'+@search+'%' OR [Url] LIKE '%'+@search+'%')")]
+        [Where("([Name] LIKE @search OR [Url] LIKE @search)")]
         public string Search { get; set; }
     }
 }

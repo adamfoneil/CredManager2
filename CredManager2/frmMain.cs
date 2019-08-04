@@ -35,31 +35,41 @@ namespace CredManager2
                     { true, "Active" },
                     { false, "Inactive" }
                 });
-                cbFilterActive.SetValue<bool>(true);
+                cbFilterActive.SetValue(true);
 
                 if (File.Exists(_settings.DatabaseFile))
                 {
-                    string pwd;
-                    while (frmEnterPwd.Prompt(_settings.DatabaseFile, out pwd))
-                    {
-                        if (TryOpenConnection(pwd)) break;
-                    }
-
-                    _db = new CredManagerDb(_settings.DatabaseFile, pwd);
+                    _db = OpenDatabase(_settings.DatabaseFile);
                 }
                 else
                 {
                     _db = CreateDatabase();
                 }
-
+                
                 _binder = new EntryGridViewBinder(_db, dgvEntries);
 
                 await FillRecordsAsync();
+
+                Text = $"CredManager - {_settings.DatabaseFile}";
             }
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
             }
+        }
+
+        private CredManagerDb OpenDatabase(string fileName)
+        {
+            string pwd;
+            while (frmEnterPwd.Prompt(fileName, out pwd))
+            {
+                if (TryOpenConnection(fileName, pwd))
+                {
+                    return new CredManagerDb(fileName, pwd);
+                }
+            }
+
+            return null;
         }
 
         private async Task FillRecordsAsync()
@@ -68,11 +78,13 @@ namespace CredManager2
 
             using (var cn = _db.GetConnection())
             {
-                var records = await new Entries()
+                var qry = new Entries()
                 {
                     IsActive = cbFilterActive.GetValue<bool>(),
-                    Search = tbSearch.Text
-                }.ExecuteAsync(cn);
+                    Search = "%" + tbSearch.Text + "%" // need to do wildcards like this in SqlCe
+                };
+
+                var records = await qry.ExecuteAsync(cn);
                 _binder.Fill(records);
             }
         }
@@ -83,17 +95,14 @@ namespace CredManager2
             _settings.Save();
         }
 
-        private bool TryOpenConnection(string pwd)
+        private bool TryOpenConnection(string fileName, string pwd)
         {
             try
             {
-                _db = new CredManagerDb(_settings.DatabaseFile, pwd);
+                _db = new CredManagerDb(fileName, pwd);
                 using (var cn = _db.GetConnection())
                 {
-                    cn.Open();
-                    Text = $"CredManager - {_settings.DatabaseFile}";
-
-                    //entryDataGridView1.Fill(_db, new Entries(_db) { IsActive = true }.Execute(cn));
+                    cn.Open();                    
                     return true;
                 }
             }
@@ -116,8 +125,7 @@ namespace CredManager2
                 {
                     _settings.DatabaseFile = databaseFile;
                     _settings.PasswordHint = hint;
-                    _settings.Save();
-                    Text = $"CredManager - {_settings.DatabaseFile}";
+                    _settings.Save();                    
                 }
                 return db;
             }
@@ -128,6 +136,36 @@ namespace CredManager2
         private async void CbFilterActive_SelectedIndexChanged(object sender, EventArgs e)
         {
             await FillRecordsAsync();
+        }
+
+        private async void TbSearch_TextChanged(object sender, EventArgs e)
+        {
+            await FillRecordsAsync();
+        }
+
+        private async void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.Filter = "SDF Files|*.sdf|All Files|*.*";
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    if (frmEnterPwd.Prompt(dlg.FileName, out string pwd))
+                    {
+                        if (TryOpenConnection(dlg.FileName, pwd))
+                        {
+                            _settings.DatabaseFile = dlg.FileName;
+                            _settings.Save();
+                            await FillRecordsAsync();
+                        }
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
     }
 }
