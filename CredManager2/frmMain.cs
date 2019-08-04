@@ -54,7 +54,7 @@ namespace CredManager2
 
                 await FillRecordsAsync();
 
-                new GridCellAutoComplete(colUserName, _binder.GetRows().GroupBy(row => row.UserName).Select(grp => grp.Key));
+                new GridCellAutoComplete(colUserName, _binder.GetRows().GroupBy(row => row.UserName).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).ToArray());
 
                 Text = $"CredManager - {_settings.DatabaseFile}";
             }

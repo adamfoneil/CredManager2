@@ -16,15 +16,19 @@ namespace CredManager2.Services
 
         private bool _showControl = false;
 
-        public GridCellAutoComplete(DataGridViewTextBoxColumn column, IEnumerable<string> items)
+        public GridCellAutoComplete(DataGridViewTextBoxColumn column, string[] items)
         {
             _colIndex = column.Index;
             _dataGridView = column.DataGridView;            
             _dataGridView.CellEnter += CellEnter;
             _dataGridView.EditingControlShowing += EditControlShowing;
 
+            // tried to do this originally with items queried dynamically via callback, but ran into access violations
+            // see https://stackoverflow.com/questions/8779557/dynamically-changing-textboxs-autocomplete-list-causes-accessviolationexception
+            // this was good enough for my purposes
+
             _items = new AutoCompleteStringCollection();
-            _items.AddRange(items.ToArray());            
+            _items.AddRange(items);
         }
 
         private void CellEnter(object sender, DataGridViewCellEventArgs e)
