@@ -82,20 +82,20 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.newToolStripMenuItem.Text = "New...";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // changePasswordToolStripMenuItem
             // 
             this.changePasswordToolStripMenuItem.Name = "changePasswordToolStripMenuItem";
-            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.changePasswordToolStripMenuItem.Text = "Change Password...";
             // 
             // btnCopyPwd
@@ -147,6 +147,7 @@
             this.dgvEntries.Name = "dgvEntries";
             this.dgvEntries.Size = new System.Drawing.Size(820, 262);
             this.dgvEntries.TabIndex = 1;
+            this.dgvEntries.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvEntries_CellContentClick);
             // 
             // colName
             // 

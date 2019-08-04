@@ -106,6 +106,7 @@
     <Compile Include="Models\Entry.cs" />
     <Compile Include="Queries\Entries.cs" />
     <Compile Include="Services\EntryGridViewBinder.cs" />
+    <Compile Include="Services\GridCellAutoComplete.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

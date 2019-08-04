@@ -4,8 +4,10 @@ using JsonSettings;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinForms.Library;
 using WinForms.Library.Extensions;
 using WinForms.Library.Models;
 
@@ -166,6 +168,37 @@ namespace CredManager2
             {
                 MessageBox.Show(exc.Message);
             }
+        }
+
+        private void DgvEntries_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                var row = dgvEntries.Rows[e.RowIndex];
+
+                if (e.ColumnIndex == colGoTo.Index)
+                {
+                    string url = row.Cells["colUrl"].Value.ToString();
+                    string[] mayStartWith = new string[] { "https://", "http://" };
+                    if (!mayStartWith.Any(item => url.ToLower().StartsWith(item))) url = mayStartWith[0] + url;
+                    FileSystem.OpenDocument(url);
+                }
+
+                if (e.ColumnIndex == colCopyUserName.Index)
+                {
+                    Clipboard.SetText(row.Cells["colUserName"].Value.ToString());
+                }
+
+                if (e.ColumnIndex == colCopyPwd.Index)
+                {
+                    Clipboard.SetText(row.Cells["colPassword"].Value.ToString());
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+
         }
     }
 }
