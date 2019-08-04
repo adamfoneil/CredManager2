@@ -80,8 +80,8 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WinForms.Library, Version=1.0.22.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WinForms.Library.1.0.22\lib\net461\WinForms.Library.dll</HintPath>
+    <Reference Include="WinForms.Library, Version=1.0.23.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinForms.Library.1.0.23\lib\net461\WinForms.Library.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +106,6 @@
     <Compile Include="Models\Entry.cs" />
     <Compile Include="Queries\Entries.cs" />
     <Compile Include="Services\EntryGridViewBinder.cs" />
-    <Compile Include="Services\GridCellAutoComplete.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
