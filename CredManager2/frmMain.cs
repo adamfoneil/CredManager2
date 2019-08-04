@@ -18,11 +18,13 @@ namespace CredManager2
         private Settings _settings = null;
         private CredManagerDb _db = null;
         private EntryGridViewBinder _binder = null;
+        private GridCellAutoComplete _autoComplete = null;
 
         public frmMain()
         {
             InitializeComponent();
             dgvEntries.AutoGenerateColumns = false;
+
         }
 
         private async void FrmMain_Load(object sender, EventArgs e)
@@ -30,7 +32,7 @@ namespace CredManager2
             try
             {
                 _settings = JsonSettingsBase.Load<Settings>();
-                _settings.FormPosition?.Apply(this);
+                _settings.FormPosition?.Apply(this);                
 
                 cbFilterActive.Fill(new Dictionary<bool, string>()
                 {
@@ -51,6 +53,8 @@ namespace CredManager2
                 _binder = new EntryGridViewBinder(_db, dgvEntries);
 
                 await FillRecordsAsync();
+
+                new GridCellAutoComplete(colUserName, _binder.GetRows().GroupBy(row => row.UserName).Select(grp => grp.Key));
 
                 Text = $"CredManager - {_settings.DatabaseFile}";
             }
