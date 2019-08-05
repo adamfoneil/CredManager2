@@ -264,51 +264,10 @@ namespace CredManager2
         {
             await PromptOpenDatabaseAsync(async (db) =>
             {
-                using (var cnSource = db.GetConnection())
-                {
-                    using (var cnDest = _db.GetConnection())
-                    {
-                        var sourceEntries = await GetEntriesAsync(cnSource);
-                        var destEntries = await GetEntriesAsync(cnDest);
-
-                        var result = await ImportEntriesAsync(sourceEntries, destEntries, cnDest);                        
-                        MessageBox.Show($"{result.NewEntries} new entries imported, {result.UpdatedEntries} entries updated.");
-                    }
-                }
+                var cmd = new ImportCommand(_db, db);
+                var result = await cmd.ExecuteAsync();
+                MessageBox.Show($"{result.NewEntries} new entries imported, {result.UpdatedEntries} entries updated.");
             });
         }
-
-        private async Task<ImportResult> ImportEntriesAsync(IEnumerable<Entry> sourceEntries, IEnumerable<Entry> destEntries, IDbConnection cn)
-        {
-            var result = new ImportResult();
-
-            var newEntries = sourceEntries.Except(destEntries);
-
-            foreach (var entry in newEntries)
-            {
-                entry.Id = 0;
-                await cn.SaveAsync(entry);
-            }
-
-            var updatedEntries = from src in sourceEntries
-                                 join dest in destEntries on src equals dest
-                                 where src.IsNewerThan(dest)
-                                 select src;
-
-            foreach (var entry in updatedEntries)
-            {
-                await cn.MergeAsync(entry);
-            }
-
-            result.NewEntries = newEntries.Count();
-            result.UpdatedEntries = updatedEntries.Count();
-            return result;
-        }
-
-        private async Task<IEnumerable<Entry>> GetEntriesAsync(SqlCeConnection connection)
-        {
-            return await connection.QueryAsync<Entry>("SELECT *FROM [Entry]");
-        }
-
     }
 }
