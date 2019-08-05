@@ -1,13 +1,10 @@
 ﻿using CredManager2.Models;
 using CredManager2.Queries;
 using CredManager2.Services;
-using Dapper;
 using JsonSettings;
-using Postulate.SqlCe.IntKey;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +28,16 @@ namespace CredManager2
 
         }
 
+        private CredManagerDb Database
+        {
+            get { return _db; }
+            set
+            {
+                _db = value;
+                dgvEntries.Enabled = (value != null);
+            }
+        }
+
         private async void FrmMain_Load(object sender, EventArgs e)
         {
             try
@@ -50,27 +57,39 @@ namespace CredManager2
 
                 if (File.Exists(_settings.DatabaseFile))
                 {
-                    _db = OpenDatabase(_settings.DatabaseFile);
+                    Database = PromptOpenDatabasePwd(_settings.DatabaseFile);
                 }
                 else
                 {
-                    _db = CreateDatabase();
+                    Database = PromptCreateDatabase();
                 }
-                
-                _binder = new EntryGridViewBinder(_db, dgvEntries);
+
+                await BindDataGridAsync();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private async Task BindDataGridAsync()
+        {
+            if (Database != null)
+            {
+                _binder = new EntryGridViewBinder(Database, dgvEntries);
 
                 int records = await FillRecordsAsync();
 
                 if (records > 0)
                 {
                     new GridCellAutoComplete(colUserName, _binder.GetRows().GroupBy(row => row.UserName).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).ToArray());
-                }                
+                }
 
-                Text = $"CredManager - {_settings.DatabaseFile}";
+                Text = $"CredManager - {_db.Filename}";
             }
-            catch (Exception exc)
+            else
             {
-                MessageBox.Show(exc.Message);
+                MessageBox.Show("No database selected.");
             }
         }
 
@@ -92,7 +111,7 @@ namespace CredManager2
             Clipboard.SetText(items[button.Text].Password);
         }
 
-        private CredManagerDb OpenDatabase(string fileName)
+        private CredManagerDb PromptOpenDatabasePwd(string fileName)
         {
             string pwd;
             while (frmEnterPwd.Prompt(fileName, out pwd))
@@ -149,7 +168,7 @@ namespace CredManager2
             }
         }
 
-        private CredManagerDb CreateDatabase()
+        private CredManagerDb PromptCreateDatabase()
         {
             string databaseFile;
             string pwd;
@@ -162,7 +181,7 @@ namespace CredManager2
                     _settings.DatabaseFile = databaseFile;
                     _settings.PasswordHint = hint;
                     _settings.Save();                    
-                }
+                }                
                 return db;
             }
 
@@ -185,9 +204,10 @@ namespace CredManager2
             {
                 await PromptOpenDatabaseAsync(async (db) =>
                 {
+                    Database = db;
                     _settings.DatabaseFile = db.Filename;
                     _settings.Save();
-                    await FillRecordsAsync();
+                    await BindDataGridAsync();
                 });
             }
             catch (Exception exc)
@@ -249,13 +269,10 @@ namespace CredManager2
             dlg.Filter = "SDF Files|*.sdf|All Files|*.*";
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                if (frmEnterPwd.Prompt(dlg.FileName, out string pwd))
+                var db = PromptOpenDatabasePwd(dlg.FileName);
+                if (db != null)
                 {
-                    if (TryOpenConnection(dlg.FileName, pwd))
-                    {
-                        var db = new CredManagerDb(dlg.FileName, pwd);
-                        await onOpen.Invoke(db);
-                    }
+                    await onOpen.Invoke(db);
                 }
             }
         }
@@ -268,6 +285,11 @@ namespace CredManager2
                 var result = await cmd.ExecuteAsync();
                 MessageBox.Show($"{result.NewEntries} new entries imported, {result.UpdatedEntries} entries updated.");
             });
+        }
+
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Database = PromptCreateDatabase();
         }
     }
 }
