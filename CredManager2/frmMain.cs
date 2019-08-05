@@ -219,7 +219,10 @@ namespace CredManager2
                 {
                     Clipboard.SetText(row.Cells["colPassword"].Value.ToString());
                     _settings.Recent.Add(entry.Name);
-                    if (_settings.Recent.Count > 5) _settings.Recent.Remove(_settings.Recent.First());
+                    /* the position of added items doesn't follow a pattern I can tell, so I pick the item first or last
+                    to remove based on whatever what you didn't just add */
+                    string remove = (_settings.Recent.First().Equals(entry.Name)) ? _settings.Recent.Last() : _settings.Recent.First();
+                    if (_settings.Recent.Count > 5) _settings.Recent.Remove(remove);
                     FillRecentItems();
                 }
             }
