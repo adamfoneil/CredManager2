@@ -1,4 +1,5 @@
-﻿using CredManager2.Queries;
+﻿using CredManager2.Models;
+using CredManager2.Queries;
 using CredManager2.Services;
 using JsonSettings;
 using System;
@@ -18,7 +19,6 @@ namespace CredManager2
         private Settings _settings = null;
         private CredManagerDb _db = null;
         private EntryGridViewBinder _binder = null;
-        private GridCellAutoComplete _autoComplete = null;
 
         public frmMain()
         {
@@ -32,7 +32,10 @@ namespace CredManager2
             try
             {
                 _settings = JsonSettingsBase.Load<Settings>();
-                _settings.FormPosition?.Apply(this);                
+                if (_settings.Recent == null) _settings.Recent = new HashSet<string>();
+                _settings.FormPosition?.Apply(this);
+
+                FillRecentItems();
 
                 cbFilterActive.Fill(new Dictionary<bool, string>()
                 {
@@ -62,6 +65,24 @@ namespace CredManager2
             {
                 MessageBox.Show(exc.Message);
             }
+        }
+
+        private void FillRecentItems()
+        {
+            btnCopyPwd.DropDownItems.Clear();
+            foreach (string item in _settings.Recent)
+            {
+                var button = new ToolStripButton(item);
+                button.Click += ItemClicked;
+                btnCopyPwd.DropDownItems.Add(button);
+            }
+        }
+
+        private void ItemClicked(object sender, EventArgs e)
+        {
+            var button = sender as ToolStripButton;
+            var items = _binder.GetRows().ToDictionary(row => row.Name);
+            Clipboard.SetText(items[button.Text].Password);
         }
 
         private CredManagerDb OpenDatabase(string fileName)
@@ -179,6 +200,7 @@ namespace CredManager2
             try
             {
                 var row = dgvEntries.Rows[e.RowIndex];
+                var entry = row.DataBoundItem as Entry;
 
                 if (e.ColumnIndex == colGoTo.Index)
                 {
@@ -196,6 +218,9 @@ namespace CredManager2
                 if (e.ColumnIndex == colCopyPwd.Index)
                 {
                     Clipboard.SetText(row.Cells["colPassword"].Value.ToString());
+                    _settings.Recent.Add(entry.Name);
+                    if (_settings.Recent.Count > 5) _settings.Recent.Remove(_settings.Recent.First());
+                    FillRecentItems();
                 }
             }
             catch (Exception exc)
@@ -203,6 +228,15 @@ namespace CredManager2
                 MessageBox.Show(exc.Message);
             }
 
+        }
+
+        private void FrmMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F3)
+            {
+                tbSearch.Focus();
+                e.Handled = true;
+            }
         }
     }
 }

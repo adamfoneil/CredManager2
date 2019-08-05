@@ -1,4 +1,5 @@
 ﻿using JsonSettings;
+using System.Collections.Generic;
 using WinForms.Library.Models;
 
 namespace CredManager2
@@ -13,5 +14,6 @@ namespace CredManager2
         public FormPosition FormPosition { get; set; }
         public string DatabaseFile { get; set; }
         public string PasswordHint { get; set; }
+        public HashSet<string> Recent { get; set; }
     }
 }
