@@ -79,7 +79,8 @@ namespace CredManager2.Models
 
         private static DateTime EffectiveDate(Entry entry)
         {
-            return Enumerable.Max(new DateTime[] {
+            return Enumerable.Max(new DateTime[]
+            {
                 entry.DateCreated,
                 entry.DateModified ?? DateTime.MinValue
             });
