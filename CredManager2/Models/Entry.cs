@@ -1,4 +1,5 @@
 ﻿using Postulate.Base.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace CredManager2.Models
@@ -22,7 +23,11 @@ namespace CredManager2.Models
         public string Password { get; set; }
 
         public bool IsActive { get; set; } = true;
-        
+
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+
+        public DateTime? DateModified { get; set; }
+
         public int Id { get; set; }
     }
 }

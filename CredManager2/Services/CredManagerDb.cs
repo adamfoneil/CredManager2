@@ -7,14 +7,13 @@ namespace CredManager2.Services
 {
     public class CredManagerDb
     {
-        private readonly string _fileName;
         private readonly string _connectionString;
 
         private SqlCeEngine _engine;
 
         public CredManagerDb(string fileName, string password)
         {
-            _fileName = fileName;
+            Filename = fileName;
             _connectionString = $"Data Source='{fileName}';LCID=1033;Password={password};Encryption Mode=Platform Default";
         }
 
@@ -22,9 +21,9 @@ namespace CredManager2.Services
         {
             _engine = new SqlCeEngine(_connectionString);
 
-            if (!File.Exists(_fileName))
+            if (!File.Exists(Filename))
             {
-                string folder = Path.GetDirectoryName(_fileName);
+                string folder = Path.GetDirectoryName(Filename);
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
                 _engine.CreateDatabase();
 
@@ -51,5 +50,7 @@ namespace CredManager2.Services
 
             return new SqlCeConnection(_connectionString);
         }
+
+        public string Filename { get; }
     }
 }

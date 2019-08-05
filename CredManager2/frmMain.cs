@@ -4,6 +4,7 @@ using CredManager2.Services;
 using JsonSettings;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -174,20 +175,12 @@ namespace CredManager2
         {
             try
             {
-                OpenFileDialog dlg = new OpenFileDialog();
-                dlg.Filter = "SDF Files|*.sdf|All Files|*.*";
-                if (dlg.ShowDialog() == DialogResult.OK)
+                await PromptOpenDatabaseAsync(async (db) =>
                 {
-                    if (frmEnterPwd.Prompt(dlg.FileName, out string pwd))
-                    {
-                        if (TryOpenConnection(dlg.FileName, pwd))
-                        {
-                            _settings.DatabaseFile = dlg.FileName;
-                            _settings.Save();
-                            await FillRecordsAsync();
-                        }
-                    }
-                }
+                    _settings.DatabaseFile = db.Filename;
+                    _settings.Save();
+                    await FillRecordsAsync();
+                });
             }
             catch (Exception exc)
             {
@@ -240,6 +233,44 @@ namespace CredManager2
                 tbSearch.Focus();
                 e.Handled = true;
             }
+        }
+
+        private async Task PromptOpenDatabaseAsync(Func<CredManagerDb, Task> onOpen)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "SDF Files|*.sdf|All Files|*.*";
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                if (frmEnterPwd.Prompt(dlg.FileName, out string pwd))
+                {
+                    if (TryOpenConnection(dlg.FileName, pwd))
+                    {
+                        var db = new CredManagerDb(dlg.FileName, pwd);
+                        await onOpen.Invoke(db);
+                    }
+                }
+            }
+        }
+
+        private async void ImportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await PromptOpenDatabaseAsync(async (db) =>
+            {
+                using (var cnSource = db.GetConnection())
+                {
+                    using (var cnDest = _db.GetConnection())
+                    {
+                        int newEntries = await ImportNewEntriesAsync(cnSource, cnDest);
+
+                        
+                    }
+                }
+            });
+        }
+
+        private Task<int> ImportNewEntriesAsync(SqlCeConnection cnSource, SqlCeConnection cnDest)
+        {
+            throw new NotImplementedException();
         }
     }
 }
