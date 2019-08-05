@@ -61,12 +61,12 @@ namespace CredManager2.Services
             return result;
         }
 
-        public IEnumerable<Entry> GetNewEntries(IEnumerable<Entry> sourceEntries, IEnumerable<Entry> destEntries)
+        public static IEnumerable<Entry> GetNewEntries(IEnumerable<Entry> sourceEntries, IEnumerable<Entry> destEntries)
         {
             return sourceEntries.Except(destEntries);
         }
 
-        public IEnumerable<Entry> GetUpdatedEntries(IEnumerable<Entry> sourceEntries, IEnumerable<Entry> destEntries)
+        public static IEnumerable<Entry> GetUpdatedEntries(IEnumerable<Entry> sourceEntries, IEnumerable<Entry> destEntries)
         {
             return from src in sourceEntries
                    join dest in destEntries on src equals dest
