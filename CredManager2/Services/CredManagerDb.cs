@@ -40,6 +40,8 @@ namespace CredManager2.Services
                             [UserName] nvarchar(50) NOT NULL,
                             [Password] nvarchar(50) NOT NULL,
                             [IsActive] bit NOT NULL,
+                            [DateCreated] datetime NOT NULL,
+                            [DateModified] datetime NULL,
                             [Id] int identity(1,1) PRIMARY KEY
                         )", cn))
                     {

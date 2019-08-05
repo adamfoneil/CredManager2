@@ -56,9 +56,12 @@ namespace CredManager2
                 
                 _binder = new EntryGridViewBinder(_db, dgvEntries);
 
-                await FillRecordsAsync();
+                int records = await FillRecordsAsync();
 
-                new GridCellAutoComplete(colUserName, _binder.GetRows().GroupBy(row => row.UserName).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).ToArray());
+                if (records > 0)
+                {
+                    new GridCellAutoComplete(colUserName, _binder.GetRows().GroupBy(row => row.UserName).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).ToArray());
+                }                
 
                 Text = $"CredManager - {_settings.DatabaseFile}";
             }
@@ -100,9 +103,9 @@ namespace CredManager2
             return null;
         }
 
-        private async Task FillRecordsAsync()
+        private async Task<int> FillRecordsAsync()
         {
-            if (_db == null) return;
+            if (_db == null) return 0;
 
             using (var cn = _db.GetConnection())
             {
@@ -114,6 +117,8 @@ namespace CredManager2
 
                 var records = await qry.ExecuteAsync(cn);
                 _binder.Fill(records);
+
+                return records.Count();
             }
         }
 
