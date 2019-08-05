@@ -1,12 +1,10 @@
 ﻿using CredManager2.Models;
 using Dapper;
 using Postulate.SqlCe.IntKey;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CredManager2.Services
@@ -44,18 +42,14 @@ namespace CredManager2.Services
         {
             var result = new ImportResult();
 
-            var newEntries = sourceEntries.Except(destEntries);
+            var newEntries = GetNewEntries(sourceEntries, destEntries);
 
             foreach (var entry in newEntries)
-            {
-                entry.Id = 0;
-                await cn.SaveAsync(entry);
+            {                
+                await cn.InsertAsync(entry);
             }
 
-            var updatedEntries = from src in sourceEntries
-                                 join dest in destEntries on src equals dest
-                                 where src.IsNewerThan(dest)
-                                 select src;
+            var updatedEntries = GetUpdatedEntries(sourceEntries, destEntries);
 
             foreach (var entry in updatedEntries)
             {
@@ -65,6 +59,19 @@ namespace CredManager2.Services
             result.NewEntries = newEntries.Count();
             result.UpdatedEntries = updatedEntries.Count();
             return result;
+        }
+
+        public IEnumerable<Entry> GetNewEntries(IEnumerable<Entry> sourceEntries, IEnumerable<Entry> destEntries)
+        {
+            return sourceEntries.Except(destEntries);
+        }
+
+        public IEnumerable<Entry> GetUpdatedEntries(IEnumerable<Entry> sourceEntries, IEnumerable<Entry> destEntries)
+        {
+            return from src in sourceEntries
+                   join dest in destEntries on src equals dest
+                   where src.IsNewerThan(dest)
+                   select src;
         }
     }
 }
