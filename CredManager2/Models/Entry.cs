@@ -4,6 +4,7 @@ using Postulate.Base.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CredManager2.Models
@@ -11,6 +12,7 @@ namespace CredManager2.Models
     [Identity(nameof(Id))]
     public class Entry : Record
     {     
+        [PrimaryKey]
         [MaxLength(100)]
         public string Name { get; set; }
 
@@ -55,6 +57,32 @@ namespace CredManager2.Models
                     DateModified = DateTime.Now;
                     break;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            var test = obj as Entry;
+            return (test != null) ? test.Name.ToLower().Equals(Name.ToLower()) : false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.ToLower().GetHashCode();
+        }
+
+        internal bool IsNewerThan(Entry compare)
+        {
+            var compareDate = EffectiveDate(compare);
+            var thisDate = EffectiveDate(this);
+            return (thisDate > compareDate);
+        }
+
+        private static DateTime EffectiveDate(Entry entry)
+        {
+            return Enumerable.Max(new DateTime[] {
+                entry.DateCreated,
+                entry.DateModified ?? DateTime.MinValue
+            });
         }
     }
 }

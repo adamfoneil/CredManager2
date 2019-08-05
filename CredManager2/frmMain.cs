@@ -1,9 +1,12 @@
 ﻿using CredManager2.Models;
 using CredManager2.Queries;
 using CredManager2.Services;
+using Dapper;
 using JsonSettings;
+using Postulate.SqlCe.IntKey;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
@@ -265,17 +268,47 @@ namespace CredManager2
                 {
                     using (var cnDest = _db.GetConnection())
                     {
-                        int newEntries = await ImportNewEntriesAsync(cnSource, cnDest);
+                        var sourceEntries = await GetEntriesAsync(cnSource);
+                        var destEntries = await GetEntriesAsync(cnDest);
 
-                        
+                        var result = await ImportEntriesAsync(sourceEntries, destEntries, cnDest);                        
+                        MessageBox.Show($"{result.NewEntries} new entries imported, {result.UpdatedEntries} entries updated.");
                     }
                 }
             });
         }
 
-        private Task<int> ImportNewEntriesAsync(SqlCeConnection cnSource, SqlCeConnection cnDest)
+        private async Task<ImportResult> ImportEntriesAsync(IEnumerable<Entry> sourceEntries, IEnumerable<Entry> destEntries, IDbConnection cn)
         {
-            throw new NotImplementedException();
+            var result = new ImportResult();
+
+            var newEntries = sourceEntries.Except(destEntries);
+
+            foreach (var entry in newEntries)
+            {
+                entry.Id = 0;
+                await cn.SaveAsync(entry);
+            }
+
+            var updatedEntries = from src in sourceEntries
+                                 join dest in destEntries on src equals dest
+                                 where src.IsNewerThan(dest)
+                                 select src;
+
+            foreach (var entry in updatedEntries)
+            {
+                await cn.MergeAsync(entry);
+            }
+
+            result.NewEntries = newEntries.Count();
+            result.UpdatedEntries = updatedEntries.Count();
+            return result;
         }
+
+        private async Task<IEnumerable<Entry>> GetEntriesAsync(SqlCeConnection connection)
+        {
+            return await connection.QueryAsync<Entry>("SELECT *FROM [Entry]");
+        }
+
     }
 }
