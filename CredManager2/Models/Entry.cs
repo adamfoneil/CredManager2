@@ -62,12 +62,12 @@ namespace CredManager2.Models
         public override bool Equals(object obj)
         {
             var test = obj as Entry;
-            return (test != null) ? test.Name.ToLower().Equals(Name.ToLower()) : false;
+            return (test != null) ? (test?.Name?.ToLower() ?? string.Empty).Equals(Name?.ToLower() ?? string.Empty) : false;
         }
 
         public override int GetHashCode()
         {
-            return Name.ToLower().GetHashCode();
+            return (Name?.ToLower() ?? string.Empty).GetHashCode();
         }
 
         internal bool IsNewerThan(Entry compare)
