@@ -1,7 +1,9 @@
 ﻿using CredManager2.Models;
 using CredManager2.Queries;
 using CredManager2.Services;
+using Dapper;
 using JsonSettings;
+using Postulate.SqlCe.IntKey;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -99,16 +101,26 @@ namespace CredManager2
             foreach (string item in _settings.Recent)
             {
                 var button = new ToolStripButton(item);
-                button.Click += ItemClicked;
+                button.Click += ItemClickedAsync;
                 btnCopyPwd.DropDownItems.Add(button);
             }
         }
 
-        private void ItemClicked(object sender, EventArgs e)
+        private async void ItemClickedAsync(object sender, EventArgs e)
         {
-            var button = sender as ToolStripButton;
-            var items = _binder.GetRows().ToDictionary(row => row.Name);
-            Clipboard.SetText(items[button.Text].Password);
+            try
+            {
+                var button = sender as ToolStripButton;
+                using (var cn = _db.GetConnection())
+                {
+                    var entry = await cn.FindWhereAsync<Entry>(new { Name = button.Text });
+                    Clipboard.SetText(entry.Password);
+                }                                
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
 
         private CredManagerDb PromptOpenDatabasePwd(string fileName)
