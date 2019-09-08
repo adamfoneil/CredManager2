@@ -3,6 +3,7 @@ using CredManager2.Queries;
 using CredManager2.Services;
 using Dapper;
 using JsonSettings;
+using PasswordGenerator;
 using Postulate.SqlCe.IntKey;
 using System;
 using System.Collections.Generic;
@@ -302,6 +303,18 @@ namespace CredManager2
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Database = PromptCreateDatabase();
+        }
+
+        private void DgvEntries_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            try
+            {                
+                e.Row.Cells["colPassword"].Value = new Password().Next(); 
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
     }
 }
