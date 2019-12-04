@@ -135,6 +135,7 @@
             // tbSearch
             // 
             this.tbSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tbSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tbSearch.Name = "tbSearch";
             this.tbSearch.Size = new System.Drawing.Size(100, 25);
             this.tbSearch.TextChanged += new System.EventHandler(this.TbSearch_TextChanged);
@@ -166,6 +167,7 @@
             this.dgvEntries.TabIndex = 1;
             this.dgvEntries.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvEntries_CellContentClick);
             this.dgvEntries.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.DgvEntries_DefaultValuesNeeded);
+            this.dgvEntries.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dgvEntries_MouseMove);
             // 
             // colName
             // 

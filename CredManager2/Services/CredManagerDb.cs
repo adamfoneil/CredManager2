@@ -1,5 +1,6 @@
 ﻿using CredManager2.Models;
 using Postulate.SqlCe.IntKey;
+using System;
 using System.Data.SqlServerCe;
 using System.IO;
 
@@ -52,6 +53,25 @@ namespace CredManager2.Services
 
             return new SqlCeConnection(_connectionString);
         }
+
+        public bool TryOpenConnection(out string errorMessage)
+        {
+            try
+            {                
+                using (var cn = GetConnection())
+                {
+                    cn.Open();
+                    errorMessage = null;
+                    return true;
+                }
+            }
+            catch (Exception exc)
+            {
+                errorMessage = exc.Message;
+                return false;
+            }
+        }
+
 
         public string Filename { get; }
     }

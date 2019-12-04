@@ -8,6 +8,7 @@ using Postulate.SqlCe.IntKey;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace CredManager2
         private Settings _settings = null;
         private CredManagerDb _db = null;
         private EntryGridViewBinder _binder = null;
+        private DataGridViewRow _rowHighlight = null;
 
         public frmMain()
         {
@@ -60,7 +62,14 @@ namespace CredManager2
 
                 if (File.Exists(_settings.DatabaseFile))
                 {
-                    Database = PromptOpenDatabasePwd(_settings.DatabaseFile);
+                    Database = PromptOpenDatabasePwd(_settings.DatabaseFile, out bool getSinglePwd, out string entryName);
+
+                    if (getSinglePwd)
+                    {
+                        CopyPasswordToClipboard(entryName);
+                        Application.Exit();
+                        return;
+                    }
                 }
                 else
                 {
@@ -68,6 +77,30 @@ namespace CredManager2
                 }
 
                 await BindDataGridAsync();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void CopyPasswordToClipboard(string entryName)
+        {
+            try
+            {
+                using (var cn = Database.GetConnection())
+                {
+                    var entry = cn.QuerySingleOrDefault<Entry>("SELECT * FROM [Entry] WHERE [Name]=@entryName", new { entryName });
+                    if (entry != null)
+                    {
+                        Clipboard.SetText(entry.Password);
+                        MessageBox.Show($"{entryName} password was copied to clipboard.");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Couldn't find entry named '{entryName}'");
+                    }
+                }
             }
             catch (Exception exc)
             {
@@ -124,17 +157,19 @@ namespace CredManager2
             }
         }
 
-        private CredManagerDb PromptOpenDatabasePwd(string fileName)
+        private CredManagerDb PromptOpenDatabasePwd(string fileName, out bool getSinglePwd, out string entryName)
         {
-            string pwd;
-            while (frmEnterPwd.Prompt(fileName, out pwd))
+            getSinglePwd = false;
+            
+            while (frmEnterPwd.Prompt(fileName, out string pwd, out entryName))
             {
                 if (TryOpenConnection(fileName, pwd))
                 {
+                    getSinglePwd = (!string.IsNullOrEmpty(entryName));
                     return new CredManagerDb(fileName, pwd);
                 }
             }
-
+            
             return null;
         }
 
@@ -165,20 +200,10 @@ namespace CredManager2
 
         private bool TryOpenConnection(string fileName, string pwd)
         {
-            try
-            {
-                _db = new CredManagerDb(fileName, pwd);
-                using (var cn = _db.GetConnection())
-                {
-                    cn.Open();                    
-                    return true;
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message);
-                return false;
-            }
+            _db = new CredManagerDb(fileName, pwd);
+            bool result = _db.TryOpenConnection(out string errorMessage);            
+            if (!result) MessageBox.Show(errorMessage);
+            return result;            
         }
 
         private CredManagerDb PromptCreateDatabase()
@@ -282,7 +307,7 @@ namespace CredManager2
             dlg.Filter = "SDF Files|*.sdf|All Files|*.*";
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                var db = PromptOpenDatabasePwd(dlg.FileName);
+                var db = PromptOpenDatabasePwd(dlg.FileName, out _, out _);
                 if (db != null)
                 {
                     await onOpen.Invoke(db);
@@ -310,6 +335,28 @@ namespace CredManager2
             try
             {                
                 e.Row.Cells["colPassword"].Value = new Password().Next(); 
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void dgvEntries_MouseMove(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                if (_rowHighlight != null)
+                {
+                    _rowHighlight.DefaultCellStyle.BackColor = SystemColors.Window;
+                }                
+
+                var hti = dgvEntries.HitTest(e.X, e.Y);
+                if (hti.RowIndex < 0) return;
+
+                var row = dgvEntries.Rows[hti.RowIndex];
+                row.DefaultCellStyle.BackColor = Color.FromArgb(208, 255, 133);
+                _rowHighlight = row;
             }
             catch (Exception exc)
             {
