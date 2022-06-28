@@ -48,8 +48,7 @@ namespace CredManager2
             try
             {
                 _settings = JsonSettingsBase.Load<Settings>();
-                if (_settings.Recent == null) _settings.Recent = new HashSet<string>();
-                _settings.FormPosition?.Apply(this);
+                if (_settings.Recent == null) _settings.Recent = new HashSet<string>();                
 
                 FillRecentItems();
 
